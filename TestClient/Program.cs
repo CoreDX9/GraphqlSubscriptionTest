@@ -25,10 +25,12 @@ var subscription = client.OnMessage.Watch();
 
 subscription.Subscribe(
     x => Console.WriteLine(x?.Data?.OnMessage.Message),
-    // It should be shown after click "Complete Subscription" button.
+    // error callback
+    // It should be shown after click "Complete Subscription" button. or complete callback
     // But this will never happen.
     ex => Console.WriteLine($"Exception happened: {ex.Message}"),
-    // It should be shown after click "Complete Subscription" button.
+    // complete callback
+    // It should be shown after click "Complete Subscription" button. or error callback
     // But this will never happen.
     () => Console.WriteLine("The subscription stream was completed by server!"));
 
