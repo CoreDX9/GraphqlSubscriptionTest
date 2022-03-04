@@ -1,0 +1,17 @@
+schema {
+  query: Query
+  subscription: Subscription
+}
+
+type Query {
+  version: String
+}
+
+type Subscription {
+  onMessage: TestMessage!
+}
+
+type TestMessage {
+  id: String!
+  message: String
+}

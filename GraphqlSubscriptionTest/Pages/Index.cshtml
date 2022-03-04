@@ -1,0 +1,45 @@
+﻿@page
+@using HotChocolate.Subscriptions
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject ITopicEventSender TopicEventSender
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subscription Test</title>
+</head>
+<body>
+    <div>
+        <form method="post">
+            <label asp-for="Message"></label>
+            <input asp-for="Message" placeholder="message" />
+            <button type="submit">Send</button>
+        </form>
+        <a href="/graphql" target="_blank">Banana Cake Pop</a>
+    </div>
+    <div>
+        <a asp-page-handler="CompleteSubscription">Complete Subscription</a>
+    </div>
+</body>
+</html>
+
+@functions {
+    [BindProperty]
+    public string Message { get; set; } = null!;
+
+    public void OnGet() { }
+
+    public async Task<IActionResult> OnPostAsync()
+    {
+        await TopicEventSender.SendAsync(TestSubscriptions.TopicName, Message);
+
+        return LocalRedirect("/");
+    }
+
+    public async Task<IActionResult> OnGetCompleteSubscriptionAsync()
+    {
+        await TopicEventSender.CompleteAsync(TestSubscriptions.TopicName);
+
+        return LocalRedirect("/");
+    }
+}
