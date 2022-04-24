@@ -2,10 +2,10 @@
   "projects": [
     {
       "schema": [
-        "TestClient/SubscriptionTestClient/schema.graphql"
+        "TestClient/schema.graphql"
       ],
       "documents": [
-        "TestClient/SubscriptionTestClient/**/*.graphql"
+        "TestClient/**/*.graphql"
       ]
     }
   ]

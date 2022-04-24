@@ -3,9 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphqlSubscriptionTest", "GraphqlSubscriptionTest\GraphqlSubscriptionTest.csproj", "{994558BF-165A-413C-82D1-7B297C86DA25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphqlSubscriptionTest", "GraphqlSubscriptionTest\GraphqlSubscriptionTest.csproj", "{994558BF-165A-413C-82D1-7B297C86DA25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestClient", "TestClient\TestClient.csproj", "{D26B56C1-7515-4465-83C4-F0EB468C6EF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestClient", "TestClient\TestClient.csproj", "{D26B56C1-7515-4465-83C4-F0EB468C6EF9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrawberryShake.Core", "Libs\Core\StrawberryShake.Core.csproj", "{B283A850-ACC1-46CC-BBD1-04BF9DD126E2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrawberryShake.Resources", "Libs\Resources\StrawberryShake.Resources.csproj", "{F61C2ABE-A2F8-4B77-BA0F-DA5ECAAC39CE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrawberryShake.Transport.WebSockets", "Libs\Transport.WebSockets\StrawberryShake.Transport.WebSockets.csproj", "{3FDC566F-0BF3-4242-8E43-0D8BC0BF739F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrawberryShake.Transport.Http", "Libs\Transport.Http\StrawberryShake.Transport.Http.csproj", "{19CC5548-92EC-423D-A42A-5B0A0FAE5DCB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +29,22 @@ Global
 		{D26B56C1-7515-4465-83C4-F0EB468C6EF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D26B56C1-7515-4465-83C4-F0EB468C6EF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D26B56C1-7515-4465-83C4-F0EB468C6EF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B283A850-ACC1-46CC-BBD1-04BF9DD126E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B283A850-ACC1-46CC-BBD1-04BF9DD126E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B283A850-ACC1-46CC-BBD1-04BF9DD126E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B283A850-ACC1-46CC-BBD1-04BF9DD126E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F61C2ABE-A2F8-4B77-BA0F-DA5ECAAC39CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F61C2ABE-A2F8-4B77-BA0F-DA5ECAAC39CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F61C2ABE-A2F8-4B77-BA0F-DA5ECAAC39CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F61C2ABE-A2F8-4B77-BA0F-DA5ECAAC39CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FDC566F-0BF3-4242-8E43-0D8BC0BF739F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FDC566F-0BF3-4242-8E43-0D8BC0BF739F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FDC566F-0BF3-4242-8E43-0D8BC0BF739F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FDC566F-0BF3-4242-8E43-0D8BC0BF739F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19CC5548-92EC-423D-A42A-5B0A0FAE5DCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19CC5548-92EC-423D-A42A-5B0A0FAE5DCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19CC5548-92EC-423D-A42A-5B0A0FAE5DCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19CC5548-92EC-423D-A42A-5B0A0FAE5DCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
