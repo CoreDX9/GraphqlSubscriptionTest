@@ -4,7 +4,7 @@ using HotChocolate.Subscriptions;
 [ExtendObjectType(OperationTypeNames.Subscription)]
 public class TestSubscriptions
 {
-    public const string TopicName = "test_topoc";
+    public const string TopicName = "test_topic";
 
     [Subscribe(With = nameof(SubscribeToOnMessageAsync))]
     public Task<TestMessage> OnMessageAsync(
