@@ -5,10 +5,11 @@ using StrawberryShake.Transport.WebSockets;
 using TestClient;
 using StrawberryShake.Transport.WebSockets.Protocols;
 using System.Reflection;
+using StrawberryShake;
 
 IServiceCollection services = new ServiceCollection();
 
-services.AddSingleton<SubscriptionSocketStateMonitor>();
+//services.AddSingleton<SubscriptionSocketStateMonitor>();
 services.AddSubscriptionTestClient()
     .ConfigureHttpClient(client =>
     {
@@ -25,8 +26,8 @@ var provider = asyncScope.ServiceProvider;
 
 var client = provider.GetRequiredService<ISubscriptionTestClient>();
 
-var monitor = provider.GetRequiredService<SubscriptionSocketStateMonitor>();
-monitor.Start(TimeSpan.FromSeconds(15));
+//var monitor = provider.GetRequiredService<SubscriptionSocketStateMonitor>();
+//monitor.Start(TimeSpan.FromSeconds(15));
 
 int i = 0;
 while (true)
@@ -47,15 +48,18 @@ while (true)
         Console.WriteLine($"{i} : The subscription stream was completed !");
         if (!Retry(i)) break;
     }
-    catch(Exception ex)
+    catch (Exception ex)
     {
         if (!Retry(i, ex)) break;
     }
 }
 
+Console.WriteLine($"Press any key to exit...");
+Console.ReadKey();
+
 static bool Retry(int index, Exception? ex = null)
 {
-    if(ex is not null) Console.WriteLine($"{index} : Exception happened: {ex.Message}");
+    if (ex is not null) Console.WriteLine($"{index} : Exception happened: {ex.Message}");
 
     Console.Write("Try reconnect? Enter is Yes :");
     var key = Console.ReadKey();
@@ -64,9 +68,7 @@ static bool Retry(int index, Exception? ex = null)
     return key.Key is ConsoleKey.Enter;
 }
 
-Console.WriteLine($"Press any key to exit...");
-Console.ReadKey();
-
+//var subscription = client.OnMessage.Watch();
 //subscription.Subscribe(
 //    OnActions.OnNext,
 //    // error callback
@@ -78,26 +80,31 @@ Console.ReadKey();
 //    // But this will never happen.
 //    OnActions.OnCompleted);
 
+//Console.WriteLine($"Press any key to exit...");
+//Console.ReadKey();
+
 //public static class OnActions
 //{
 //    public static void OnNext(IOperationResult<IOnMessageResult> result) => Console.WriteLine(result?.Data?.OnMessage.Message);
 //    public static void OnError(Exception ex) => Console.WriteLine($"Exception happened: {ex.Message}");
-//    public static void OnCompleted() => Console.WriteLine("The subscription stream was completed by server!");
+//    public static void OnCompleted() => Console.WriteLine("The subscription stream was completed!");
 //}
 
 // If you want Monitor work well, please look at StrawberryShake.Core.OperationExecutor.Observable.cs line 133 !!
 public class SubscriptionSocketStateMonitor
 {
+    private const BindingFlags _bindingFlags = BindingFlags.NonPublic | BindingFlags.Instance;
+
     private readonly System.Timers.Timer _timer;
     private readonly ISessionPool _sessionPool;
     private readonly Type _sessionPoolType;
     private readonly FieldInfo _sessionsField;
 
-    private readonly FieldInfo _socketOperationsDictionaryField = typeof(Session).GetField("_operations", BindingFlags.NonPublic | BindingFlags.Instance)!;
-    private readonly FieldInfo _socketOperationManagerField = typeof(SocketOperation).GetField("_manager", BindingFlags.NonPublic | BindingFlags.Instance)!;
-    private readonly FieldInfo _socketProtocolField = typeof(Session)!.GetField("_socketProtocol", BindingFlags.NonPublic | BindingFlags.Instance)!;
-    private readonly FieldInfo _protocolReceiverField = typeof(GraphQLWebSocketProtocol).GetField("_receiver", BindingFlags.NonPublic | BindingFlags.Instance)!;
-    private readonly MethodInfo _notifyMethod = typeof(SocketProtocolBase).GetMethod("Notify", BindingFlags.NonPublic | BindingFlags.Instance)!;
+    private readonly FieldInfo _socketOperationsDictionaryField = typeof(Session).GetField("_operations", _bindingFlags)!;
+    private readonly FieldInfo _socketOperationManagerField = typeof(SocketOperation).GetField("_manager", _bindingFlags)!;
+    private readonly FieldInfo _socketProtocolField = typeof(Session)!.GetField("_socketProtocol", _bindingFlags)!;
+    private readonly FieldInfo _protocolReceiverField = typeof(GraphQLWebSocketProtocol).GetField("_receiver", _bindingFlags)!;
+    private readonly MethodInfo _notifyMethod = typeof(SocketProtocolBase).GetMethod("Notify", _bindingFlags)!;
 
     private Type? _sessionInfoType;
     private PropertyInfo? _sessionProperty;
@@ -110,10 +117,10 @@ public class SubscriptionSocketStateMonitor
         _timer = new();
         _timer.Elapsed += (s, e) => NotifySocketClosed();
         _timer.AutoReset = true;
-
+        _timer.Interval = 1_500;
         _sessionPool = sessionPool;
         _sessionPoolType = _sessionPool.GetType();
-        _sessionsField = _sessionPoolType.GetField("_sessions", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        _sessionsField = _sessionPoolType.GetField("_sessions", _bindingFlags)!;
     }
 
     private void NotifySocketClosed()
@@ -136,12 +143,12 @@ public class SubscriptionSocketStateMonitor
                 var receiver = _protocolReceiverField.GetValue(protocol)!;
 
                 _receiverType ??= receiver.GetType();
-                _receiverClientField ??= _receiverType.GetField("_client", BindingFlags.NonPublic | BindingFlags.Instance)!;
+                _receiverClientField ??= _receiverType.GetField("_client", _bindingFlags)!;
                 var client = _receiverClientField.GetValue(receiver) as ISocketClient;
 
                 if (client!.IsClosed is false) continue;
 
-                _receiverCancellationTokenSourceField ??= _receiverType.GetField("_cts", BindingFlags.NonPublic | BindingFlags.Instance)!;
+                _receiverCancellationTokenSourceField ??= _receiverType.GetField("_cts", _bindingFlags)!;
 
                 var cts = _receiverCancellationTokenSourceField.GetValue(receiver) as CancellationTokenSource;
 
@@ -152,10 +159,10 @@ public class SubscriptionSocketStateMonitor
         }
     }
 
-    public void Start(TimeSpan interval)
+    public void Start(TimeSpan? interval = null)
     {
         _timer.Stop();
-        _timer.Interval = interval.TotalMilliseconds;
+        if (interval is not null) _timer.Interval = interval.Value.TotalMilliseconds;
         _timer.Start();
     }
 
